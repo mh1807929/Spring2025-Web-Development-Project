@@ -1,0 +1,55 @@
+{
+    "courses": [
+      {
+        "code": "CMPS350",
+        "name": "Web Development",
+        "category": "Programming",
+        "description": "Fundamentals of web development including HTML, CSS, and JavaScript",
+        "prerequisites": ["CMPS151", "CMPS152"],
+        "status": "open",
+        "classes": [
+          {
+            "classId": "CMPS350-01",
+            "instructor": "Dr. Ali Khan",
+            "schedule": "Mon/Wed 10:00-11:15",
+            "capacity": 30,
+            "registeredStudents": []
+          }
+        ]
+      },
+      {
+        "code": "CMPS251",
+        "name": "Data Structures",
+        "category": "Programming",
+        "description": "Introduction to fundamental data structures",
+        "prerequisites": ["CMPS152"],
+        "status": "open",
+        "classes": [
+          {
+            "classId": "CMPS251-01",
+            "instructor": "Dr. Sara Ahmed",
+            "schedule": "Sun/Tue 08:30-09:45",
+            "capacity": 25,
+            "registeredStudents": []
+          }
+        ]
+      },
+      {
+        "code": "CMPS303",
+        "name": "Database Systems",
+        "category": "Databases",
+        "description": "Introduction to database management systems",
+        "prerequisites": ["CMPS251"],
+        "status": "open",
+        "classes": [
+          {
+            "classId": "CMPS303-01",
+            "instructor": "Dr. Omar Mahmoud",
+            "schedule": "Sun/Tue 13:00-14:15",
+            "capacity": 20,
+            "registeredStudents": []
+          }
+        ]
+      }
+    ]
+  }

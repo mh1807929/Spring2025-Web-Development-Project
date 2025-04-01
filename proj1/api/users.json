@@ -1,0 +1,28 @@
+{
+    "users": [
+      {
+        "username": "student1",
+        "password": "student123",
+        "role": "student",
+        "name": "Ahmed Mohamed",
+        "id": "20201234",
+        "completedCourses": [
+          {"code": "CMPS151", "name": "Introduction to Programming", "grade": "A"},
+          {"code": "CMPS152", "name": "Object Oriented Programming", "grade": "B+"}
+        ]
+      },
+      {
+        "username": "instructor1",
+        "password": "instructor123",
+        "role": "instructor",
+        "name": "Dr. Ali Khan",
+        "expertise": ["Programming", "Web Development"]
+      },
+      {
+        "username": "admin1",
+        "password": "admin123",
+        "role": "admin",
+        "name": "Admin User"
+      }
+    ]
+  }
