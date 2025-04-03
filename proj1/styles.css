@@ -338,3 +338,168 @@ body {
         padding: 1rem;
     }
 }
+
+/* Learning Path Styles */
+.learning-path-section {
+    margin-top: 2rem;
+    background: white;
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+  }
+  
+  .path-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 0.5rem;
+  }
+  
+  .path-tab {
+    padding: 0.5rem 1rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.3s;
+  }
+  
+  .path-tab:hover {
+    background-color: var(--light-color);
+  }
+  
+  .path-tab.active {
+    background-color: var(--primary-color);
+    color: white;
+  }
+  
+  .path-pane {
+    display: none;
+  }
+  
+  .path-pane.active {
+    display: block;
+  }
+  
+  .path-course {
+    padding: 1rem;
+    margin-bottom: 0.5rem;
+    background-color: var(--light-color);
+    border-radius: var(--border-radius);
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .path-course.completed {
+    border-left: 4px solid var(--success-color);
+  }
+  
+  .path-course.in-progress {
+    border-left: 4px solid var(--primary-color);
+  }
+  
+  .path-course.pending {
+    border-left: 4px solid var(--warning-color);
+  }
+  
+  .course-grade {
+    font-weight: bold;
+    color: var(--dark-color);
+  }
+
+/* Admin Section */
+.admin-section {
+    display: none; /* Hidden by default */
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: white;
+    border-radius: var(--border-radius);
+}
+
+.admin-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.admin-btn {
+    padding: 0.8rem 1.2rem;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.admin-btn:hover {
+    background-color: var(--secondary-color);
+}
+
+/* Registration Button */
+.register-btn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 0.5rem;
+    transition: background-color 0.3s;
+}
+
+.register-btn:hover:not(:disabled) {
+    background-color: var(--secondary-color);
+}
+
+.register-btn:disabled {
+    background-color: #95a5a6;
+    cursor: not-allowed;
+}
+
+.cancel-btn {
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.cancel-btn:hover {
+    background-color: #c0392b;
+}
+
+.message {
+    position: fixed;  
+    top: 10px;        
+    left: 50%;
+    transform: translateX(-50%); 
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    width: auto;    
+    max-width: 90%;  
+    display: none;   
+    border-radius: 5px; 
+}
+
+/* Error message styles */
+.message.error {
+    background-color: #f44336;
+    color: white;
+}
+
+.message.success {
+    background-color: #4CAF50;  /* Green background */
+    color: white;
+}
+
+/* Make message visible */
+.message.show {
+    display: block;  
+}

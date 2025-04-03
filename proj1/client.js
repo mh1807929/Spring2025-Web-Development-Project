@@ -96,7 +96,10 @@ async function handleLogin() {
             loginScreen.style.display = 'none';
             appMain.style.display = 'block';
             welcomeMessage.textContent = `Welcome, ${user.name}`;
-            await displayUserCourses();
+            applyFilters();
+            //displays learning path
+            displayLearningPath(); 
+            setupLearningPathTabs(); 
         } else {
             showMessage('Invalid username or password', 'error');
         }
@@ -199,3 +202,271 @@ function displayCourses(courses) {
     });
 }
 
+
+
+// Handle course registration
+async function handleRegistration(e) {
+    const courseCode = e.target.dataset.course;
+    const classId = e.target.dataset.class;
+    
+    // Find the selected course and class
+    const course = allCourses.find(c => c.code === courseCode);
+    const cls = course.classes.find(c => c.classId === classId);
+    
+    // Check prerequisites
+    const hasPrerequisites = checkPrerequisites(currentUser, course);
+    
+    // Target the registration message container
+    const registrationMessage = document.getElementById('registration-message');
+    
+    if (!hasPrerequisites) {
+        // Display message if prerequisites are not met
+        showMessage(`You must complete all prerequisites for ${course.name}`, 'error', registrationMessage);
+        return;
+    }
+    
+    // Check if class is full
+    if (cls.registeredStudents.length >= cls.capacity) {
+        showMessage(`Class ${classId} is full`, 'error', registrationMessage);
+        return;
+    }
+    
+    // Check if already registered
+    if (cls.registeredStudents.includes(currentUser.id)) {
+        showMessage(`You're already registered for this class`, 'error', registrationMessage);
+        return;
+    }
+    
+    try {
+        cls.registeredStudents.push(currentUser.id);
+        
+        // Update UI
+        e.target.disabled = true;
+        e.target.textContent = 'Pending Approval';
+        showMessage(`Registration request submitted for ${course.name}`, 'success', registrationMessage);
+        
+        console.log(`User ${currentUser.id} registered for ${courseCode}, class ${classId}`);
+        
+    } catch (error) {
+        console.error('Registration error:', error);
+        showMessage('Registration failed. Please try again.', 'error', registrationMessage);
+    }
+}
+
+// Check if student meets prerequisites
+function checkPrerequisites(student, course) {
+    if (!course.prerequisites || course.prerequisites.length === 0) {
+        return true;
+    }
+    
+    const completedCodes = student.completedCourses?.map(c => c.code) || [];
+    return course.prerequisites.every(preReq => completedCodes.includes(preReq));
+}
+
+// Modify your displayCourses function to add registration buttons:
+function displayCourses(courses) {
+    coursesGrid.innerHTML = '';
+    
+    if (!courses || courses.length === 0) {
+        coursesGrid.innerHTML = `
+            <div class="no-results">
+                <i class="fas fa-search"></i>
+                <p>No courses found matching your criteria</p>
+            </div>
+        `;
+        return;
+    }
+    
+    courses.forEach(course => {
+        const courseCard = document.createElement('div');
+        courseCard.className = 'course-card';
+        
+        courseCard.innerHTML = `
+            <div class="course-header">
+                <h4>${course.name}</h4>
+                <span class="course-code">${course.code}</span>
+            </div>
+            <div class="course-body">
+                <div class="course-meta">
+                    <span class="course-category">${course.category}</span>
+                    <span class="course-status">${course.status.toUpperCase()}</span>
+                </div>
+                <p class="course-description">${course.description}</p>
+                <div class="course-prereqs">
+                    <span>Prerequisites:</span> ${course.prerequisites?.join(', ') || 'None'}
+                </div>
+                
+                ${(course.classes || []).map(cls => {
+                    const isRegistered = cls.registeredStudents?.includes(currentUser.id);
+                    const isFull = cls.registeredStudents?.length >= cls.capacity;
+                    
+                    return `
+                    <div class="class-info">
+                        <p><strong>Class:</strong> ${cls.classId}</p>
+                        <p><strong>Instructor:</strong> ${cls.instructor}</p>
+                        <p><strong>Schedule:</strong> ${cls.schedule}</p>
+                        <p><strong>Availability:</strong> ${cls.capacity - (cls.registeredStudents?.length || 0)}/${cls.capacity}</p>
+                        ${currentUser.role === 'student' && course.status === 'open' ? `
+                            <button class="register-btn" 
+                                    data-course="${course.code}" 
+                                    data-class="${cls.classId}"
+                                    ${isRegistered || isFull ? 'disabled' : ''}>
+                                ${isRegistered ? 'Registered' : isFull ? 'Class Full' : 'Register'}
+                            </button>
+                        ` : ''}
+                    </div>
+                    `;
+                }).join('')}
+            </div>
+        `;
+        
+        coursesGrid.appendChild(courseCard);
+    });
+    
+    // Add event listeners to register buttons
+    if (currentUser.role === 'student') {
+        document.querySelectorAll('.register-btn:not([disabled])').forEach(btn => {
+            btn.addEventListener('click', handleRegistration);
+        });
+    }
+}
+
+function setupLearningPathTabs() {
+    const tabs = document.querySelectorAll('.path-tab');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        // Remove active class from all tabs
+        tabs.forEach(t => t.classList.remove('active'));
+        // Add active class to clicked tab
+        tab.classList.add('active');
+        
+        // Hide all panes
+        document.querySelectorAll('.path-pane').forEach(pane => {
+          pane.classList.remove('active');
+        });
+        
+        // Show selected pane
+        const tabName = tab.dataset.tab;
+        document.getElementById(`${tabName}-courses`).classList.add('active');
+      });
+    });
+  }
+  
+  function displayLearningPath() {
+    if (currentUser?.role !== 'student') {
+      document.getElementById('learning-path-section').style.display = 'none';
+      return;
+    }
+    
+    document.getElementById('learning-path-section').style.display = 'block';
+    
+    // Get all registered courses (in-progress)
+    const inProgressCourses = [];
+    allCourses.forEach(course => {
+      course.classes.forEach(cls => {
+        if (cls.registeredStudents?.includes(currentUser.id)) {
+          inProgressCourses.push({
+            ...course,
+            classInfo: cls,
+            status: 'in-progress'
+          });
+        }
+      });
+    });
+    
+    // Get completed courses (from user data)
+    const completedCourses = currentUser.completedCourses?.map(course => ({
+      ...course,
+      status: 'completed'
+    })) || [];
+    
+    // Get pending courses (registered but not started)
+    const pendingCourses = inProgressCourses.filter(course => 
+      course.status === 'open' && 
+      !completedCourses.some(c => c.code === course.code)
+    );
+    
+    // Filter out pending from in-progress
+    const filteredInProgress = inProgressCourses.filter(course => 
+      !pendingCourses.some(c => c.code === course.code)
+    );
+    
+    // Display each category
+    displayPathCourses(completedCourses, 'completed');
+    displayPathCourses(filteredInProgress, 'in-progress');
+    displayPathCourses(pendingCourses, 'pending');
+  }
+  
+  function displayPathCourses(courses, status) {
+    const container = document.getElementById(`${status}-courses`);
+    container.innerHTML = '';
+    
+    if (courses.length === 0) {
+      container.innerHTML = `<p class="no-courses">No ${status.replace('-', ' ')} courses found.</p>`;
+      return;
+    }
+    
+    courses.forEach(course => {
+      const courseEl = document.createElement('div');
+      courseEl.className = `path-course ${status}`;
+      
+      if (status === 'completed') {
+        courseEl.innerHTML = `
+          <div>
+            <h4>${course.name} (${course.code})</h4>
+            <p>${course.description}</p>
+          </div>
+          <div class="course-grade">Grade: ${course.grade}</div>
+        `;
+      } else {
+        courseEl.innerHTML = `
+          <div>
+            <h4>${course.name} (${course.code})</h4>
+            <p>${course.description}</p>
+            <p><strong>Instructor:</strong> ${course.classInfo.instructor}</p>
+            <p><strong>Schedule:</strong> ${course.classInfo.schedule}</p>
+          </div>
+          <div>
+            ${status === 'pending' ? 
+              '<button class="cancel-btn" data-course="${course.code}" data-class="${course.classInfo.classId}">Cancel</button>' : 
+              '<div class="status-badge">In Progress</div>'}
+          </div>
+        `;
+      }
+      
+      container.appendChild(courseEl);
+    });
+    
+    // Add event listeners to cancel buttons
+    if (status === 'pending') {
+      document.querySelectorAll('.cancel-btn').forEach(btn => {
+        btn.addEventListener('click', handleCancelRegistration);
+      });
+    }
+  }
+  
+  function handleCancelRegistration(e) {
+    const courseCode = e.target.dataset.course;
+    const classId = e.target.dataset.class;
+    
+    // Find the course and class
+    const course = allCourses.find(c => c.code === courseCode);
+    const cls = course.classes.find(c => c.classId === classId);
+    
+    // Remove student from registeredStudents
+    cls.registeredStudents = cls.registeredStudents.filter(id => id !== currentUser.id);
+    
+    // Update display
+    displayLearningPath();
+    applyFilters();
+    
+    showMessage(`Registration canceled for ${course.name}`, 'success');
+  }
+
+function showMessage(message, type, target) {
+    target.textContent = message;
+    target.className = `message ${type} show`;  // Add 'show' class to make it visible
+    setTimeout(() => {
+        target.classList.remove("show");  // Remove 'show' after 3 seconds
+    }, 3000);
+}

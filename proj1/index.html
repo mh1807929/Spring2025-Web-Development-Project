@@ -14,7 +14,7 @@
             <div class="login-card">
                 <div class="logo">
                     <i class="fas fa-graduation-cap"></i>
-                    <h1>Barhamgi university for Eemotional Daamage</h1>
+                    <h1>Qatar University</h1>
                 </div>
                 <form id="login-form">
                     <div class="input-group">
@@ -48,7 +48,6 @@
                 <!-- Search Section -->
                 <section class="search-section">
                     <div class="search-box">
-                        <input type="text" id="course-search" placeholder="Search courses by name or category...">
                         <button id="search-btn"><i class="fas fa-search"></i></button>
                     </div>
                     <div class="filter-options">
@@ -62,8 +61,53 @@
                 <section class="courses-section">
                     <h3>Available Courses</h3>
                     <div class="courses-grid" id="courses-grid">
-                        <!-- Courses will be loaded here -->
+                        <!-- Dynamic content will be loaded here -->
                     </div>
+                </section>
+
+                <div id="registration-message" class="message"></div>
+
+                <!-- Learning Path Section (for students) -->
+                <section class="learning-path-section" id="learning-path-section">
+                    <h3>My Learning Path</h3>
+                    <div class="path-tabs">
+                        <button class="path-tab active" data-tab="completed">Completed</button>
+                        <button class="path-tab" data-tab="in-progress">In Progress</button>
+                        <button class="path-tab" data-tab="pending">Pending</button>
+                    </div>
+                    <div class="path-content">
+                        <div id="completed-courses" class="path-pane active"></div>
+                        <div id="in-progress-courses" class="path-pane"></div>
+                        <div id="pending-courses" class="path-pane"></div>
+                    </div>
+                </section>
+
+                <!-- Admin Panel (hidden for non-admins) -->
+                <section class="admin-section" id="admin-section">
+                    <h3>Admin Controls</h3>
+                    <div class="admin-actions">
+                        <button id="approve-courses-btn" class="admin-btn">
+                            <i class="fas fa-check-circle"></i> Approve Pending Courses
+                        </button>
+                        <button id="create-course-btn" class="admin-btn">
+                            <i class="fas fa-plus-circle"></i> Create New Course
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Add this inside <main class="app-content"> -->
+                <section class="learning-path-section" id="learning-path-section">
+                <h3>My Learning Path</h3>
+                <div class="path-tabs">
+                    <button class="path-tab active" data-tab="completed">Completed</button>
+                    <button class="path-tab" data-tab="in-progress">In Progress</button>
+                    <button class="path-tab" data-tab="pending">Pending</button>
+                </div>  
+                <div class="path-content">
+                    <div id="completed-courses" class="path-pane active"></div>
+                    <div id="in-progress-courses" class="path-pane"></div>
+                    <div id="pending-courses" class="path-pane"></div>
+                </div>
                 </section>
             </main>
         </div>
