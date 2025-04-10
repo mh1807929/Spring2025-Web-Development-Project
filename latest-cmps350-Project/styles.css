@@ -656,3 +656,125 @@ body {
 .btn-primary:hover {
     background-color: var(--secondary-color);
 }
+
+/* Instructor Panel Styles */
+.instructor-section {
+    margin-top: 2rem;
+    background: white;
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    display: none; /* Hidden by default, shown only for instructors */
+}
+
+.instructor-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 0.5rem;
+}
+
+.instructor-tab {
+    padding: 0.5rem 1rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.3s;
+}
+
+.instructor-tab:hover {
+    background-color: var(--light-color);
+}
+
+.instructor-tab.active {
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+.instructor-pane {
+    display: none;
+}
+
+.instructor-pane.active {
+    display: block;
+}
+
+.instructor-class-card {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: var(--border-radius);
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+}
+
+.instructor-class-header {
+    padding: 1rem;
+    background-color: var(--secondary-color);
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.instructor-class-body {
+    padding: 1.5rem;
+}
+
+.student-list {
+    margin-top: 1.5rem;
+    background-color: var(--light-color);
+    padding: 1rem;
+    border-radius: var(--border-radius);
+}
+
+.student-list h5 {
+    margin-bottom: 1rem;
+    color: var(--dark-color);
+}
+
+.grades-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+.grades-table th, 
+.grades-table td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.grades-table th {
+    background-color: #f9f9f9;
+    font-weight: 600;
+}
+
+.grade-input-group {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.grade-input {
+    width: 80px;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    text-transform: uppercase;
+}
+
+.submit-grade-btn {
+    background-color: var(--success-color);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.submit-grade-btn:hover {
+    background-color: #27ae60;
+}

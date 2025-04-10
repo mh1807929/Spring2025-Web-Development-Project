@@ -41,6 +41,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (currentUser.role === 'admin') {
             setupAdminPanel();
         }
+
+        if (currentUser.role === 'instructor') {
+            setupInstructorView();
+        }
     }
 });
 
@@ -153,6 +157,10 @@ async function handleLogin() {
                 // Hide admin section if exists
                 const adminSection = document.getElementById('admin-section');
                 if (adminSection) adminSection.style.display = 'none';
+
+                //Hide instructor section 
+                const instructorSection = document.getElementById('instructor-section');
+                if (instructorSection) instructorSection.style.display = 'none';
             } 
             
             if (user.role === 'admin') {
@@ -160,9 +168,26 @@ async function handleLogin() {
                 const learningPathSection = document.getElementById('learning-path-section');
                 if (learningPathSection) learningPathSection.style.display = 'none';
                 
+                //Hide instructor section 
+                const instructorSection = document.getElementById('instructor-section');
+                if (instructorSection) instructorSection.style.display = 'none';
+
                 // Setup admin panel
                 setupAdminPanel();
             }
+
+            if (user.role === 'instructor') {
+                // Hide other sections
+                const learningPathSection = document.getElementById('learning-path-section');
+                if (learningPathSection) learningPathSection.style.display = 'none';
+                
+                const adminSection = document.getElementById('admin-section');
+                if (adminSection) adminSection.style.display = 'none';
+                
+                // Setup instructor view
+                setupInstructorView();
+            }
+
         } else {
             showMessage('Invalid username or password', 'error');
         }
@@ -771,4 +796,210 @@ function createNewCourse() {
     
     // Refresh admin courses list
     loadAdminCourses();
+}
+
+// Function to set up instructor view when logging in
+function setupInstructorView() {
+    const instructorSection = document.getElementById('instructor-section');
+    if (!instructorSection) return;
+    
+    if (currentUser?.role === 'instructor') {
+        instructorSection.style.display = 'block';
+        loadInstructorClasses();
+        
+        // Hide other role-specific sections
+        const adminSection = document.getElementById('admin-section');
+        if (adminSection) adminSection.style.display = 'none';
+        
+        const learningPathSection = document.getElementById('learning-path-section');
+        if (learningPathSection) learningPathSection.style.display = 'none';
+    } else {
+        instructorSection.style.display = 'none';
+    }
+}
+
+// Function to load classes taught by the instructor
+function loadInstructorClasses() {
+    const instructorClassesList = document.getElementById('instructor-classes-list');
+    if (!instructorClassesList) return;
+    
+    // Filter courses to find classes taught by this instructor
+    const instructorCourses = allCourses.filter(course => 
+        course.classes?.some(cls => cls.instructor === currentUser.name)
+    );
+    
+    if (instructorCourses.length === 0) {
+        instructorClassesList.innerHTML = `
+            <div class="no-results">
+                <p>You are not currently teaching any classes.</p>
+            </div>
+        `;
+        return;
+    }
+    
+    instructorClassesList.innerHTML = '';
+    
+    // Display each course and its classes
+    instructorCourses.forEach(course => {
+        // Filter to only include classes taught by this instructor
+        const instructorClasses = course.classes.filter(
+            cls => cls.instructor === currentUser.name
+        );
+        
+        instructorClasses.forEach(cls => {
+            const classCard = document.createElement('div');
+            classCard.className = 'instructor-class-card';
+            
+            // Get registered and approved students
+            const approvedStudents = cls.registeredStudents?.filter(
+                reg => reg.status === 'approved'
+            ) || [];
+            
+            classCard.innerHTML = `
+                <div class="instructor-class-header">
+                    <h4>${course.name} (${course.code})</h4>
+                    <span class="class-id">Class: ${cls.classId}</span>
+                </div>
+                <div class="instructor-class-body">
+                    <p><strong>Schedule:</strong> ${cls.schedule}</p>
+                    <p><strong>Students:</strong> ${approvedStudents.length}/${cls.capacity}</p>
+                    
+                    <div class="student-list">
+                        <h5>Enrolled Students</h5>
+                        ${approvedStudents.length === 0 ? 
+                            '<p>No students enrolled yet.</p>' : 
+                            '<table class="grades-table">'+
+                            '<thead>'+
+                            '<tr>'+
+                                '<th>Student ID</th>'+
+                                '<th>Current Grade</th>'+
+                                '<th>Action</th>'+
+                            '</tr>'+
+                            '</thead>'+
+                            '<tbody>'+
+                            approvedStudents.map(student => {
+                                return `
+                                <tr>
+                                    <td>${student.studentId}</td>
+                                    <td>${student.grade || 'Not graded'}</td>
+                                    <td>
+                                        <div class="grade-input-group">
+                                            <input type="text" class="grade-input" 
+                                                   placeholder="A, B, C, D, F" 
+                                                   value="${student.grade || ''}"
+                                                   pattern="[A-F]"
+                                                   maxlength="1">
+                                            <button class="submit-grade-btn"
+                                                    data-course="${course.code}"
+                                                    data-class="${cls.classId}"
+                                                    data-student="${student.studentId}">
+                                                Submit
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                `;
+                            }).join('')+
+                            '</tbody>'+
+                            '</table>'
+                        }
+                    </div>
+                </div>
+            `;
+            
+            instructorClassesList.appendChild(classCard);
+        });
+    });
+    
+    // Add event listeners for grade submission buttons
+    document.querySelectorAll('.submit-grade-btn').forEach(btn => {
+        btn.addEventListener('click', submitGrade);
+    });
+}
+
+// Function to submit a grade for a student
+function submitGrade(e) {
+    const courseCode = e.target.dataset.course;
+    const classId = e.target.dataset.class;
+    const studentId = e.target.dataset.student;
+    
+    // Get the grade from the input field (previous sibling of the button)
+    const gradeInput = e.target.previousElementSibling;
+    const grade = gradeInput.value.trim().toUpperCase();
+    
+    // Validate the grade
+    if (!grade.match(/^[A-F]$/)) {
+        showMessage("Please enter a valid grade (A, B, C, D, or F)", "error");
+        return;
+    }
+    
+    // Find the course, class, and student registration
+    const course = allCourses.find(c => c.code === courseCode);
+    if (!course) {
+        showMessage("Course not found", "error");
+        return;
+    }
+    
+    const cls = course.classes.find(c => c.classId === classId);
+    if (!cls) {
+        showMessage("Class not found", "error");
+        return;
+    }
+    
+    // Verify that the current instructor is teaching this class
+    if (cls.instructor !== currentUser.name) {
+        showMessage("You are not authorized to submit grades for this class", "error");
+        return;
+    }
+    
+    const registration = cls.registeredStudents.find(r => r.studentId === studentId);
+    if (!registration) {
+        showMessage("Student not found in this class", "error");
+        return;
+    }
+    
+    // Update the grade
+    registration.grade = grade;
+    
+    // Update the completed courses for the student if they passed (A, B, C, D)
+    if (grade !== 'F') {
+        // Find the student in the users array
+        const users = JSON.parse(localStorage.getItem('users')) || [];
+        const student = users.find(u => u.id === studentId);
+        
+        if (student) {
+            // Initialize completedCourses array if it doesn't exist
+            if (!student.completedCourses) {
+                student.completedCourses = [];
+            }
+            
+            // Check if course already exists in completed courses
+            const existingCompletion = student.completedCourses.findIndex(c => c.code === course.code);
+            
+            if (existingCompletion >= 0) {
+                // Update the existing completion
+                student.completedCourses[existingCompletion].grade = grade;
+            } else {
+                // Add the course to completed courses
+                student.completedCourses.push({
+                    code: course.code,
+                    name: course.name,
+                    grade: grade,
+                    description: course.description
+                });
+            }
+            
+            // Save the updated users
+            localStorage.setItem('users', JSON.stringify(users));
+        }
+    }
+    
+    // Save the updated course registrations
+    localStorage.setItem('courseRegistrations', JSON.stringify(allCourses));
+    
+    // Show success message
+    showMessage(`Grade submitted successfully for student ${studentId}`, "success");
+    
+    // Refresh the instructor view
+    loadInstructorClasses();
 }
