@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QU Student Portal</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Login Screen -->
+        <div class="login-container" id="login-screen">
+            <div class="login-card">
+                <div class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    <h1>Qatar University</h1>
+                </div>
+                <form id="login-form">
+                    <div class="input-group">
+                        <label for="username"><i class="fas fa-user"></i> Username</label>
+                        <input type="text" id="username" placeholder="Enter your username" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="password"><i class="fas fa-lock"></i> Password</label>
+                        <input type="password" id="password" placeholder="Enter your password" required>
+                    </div>
+                    <button type="submit" class="login-btn">Sign In</button>
+                </form>
+                <div class="login-message" id="login-message"></div>
+            </div>
+        </div>
+
+        <!-- Main App -->
+        <div class="app-main" id="app-main">
+            <header class="app-header">
+                <div class="header-left">
+                    <h2 id="welcome-message">Welcome, Student</h2>
+                </div>
+                <div class="header-right">
+                    <button id="logout-btn" class="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </header>
+
+            <main class="app-content">
+                <!-- Search Section -->
+                <section class="search-section">
+                    <div class="search-box">
+                        <input type="text" id="course-search" placeholder="Search courses by name, code, or category...">
+                        <button id="search-btn"><i class="fas fa-search"></i></button>
+                    </div>
+                    <div class="filter-options">
+                        <button class="filter-btn active" data-filter="all">All Courses</button>
+                        <button class="filter-btn" data-filter="programming">Programming</button>
+                        <button class="filter-btn" data-filter="databases">Databases</button>
+                    </div>
+                </section>
+
+                <!-- Courses Display -->
+                <section class="courses-section">
+                    <h3>Available Courses</h3>
+                    <div class="courses-grid" id="courses-grid">
+                        <!-- Dynamic content will be loaded here -->
+                    </div>
+                </section>
+
+                <div id="registration-message" class="message"></div>
+
+                <!-- Learning Path Section -->
+                <section class="learning-path-section" id="learning-path-section">
+                    <h3>My Learning Path</h3>
+                    <div class="path-tabs">
+                        <button class="path-tab active" data-tab="completed">Completed</button>
+                        <button class="path-tab" data-tab="in-progress">In Progress</button>
+                        <button class="path-tab" data-tab="pending">Pending</button>
+                    </div>
+                    <div class="path-content">
+                        <div id="completed-courses" class="path-pane active"></div>
+                        <div id="in-progress-courses" class="path-pane"></div>
+                        <div id="pending-courses" class="path-pane"></div>
+                    </div>
+                </section>
+
+                <!-- Admin Panel -->
+                <section class="admin-section" id="admin-section">
+                    <h3>Admin Dashboard</h3>
+
+                    <div class="admin-tabs">
+                        <button class="admin-tab active" data-tab="manage-courses">Manage Courses</button>
+                        <button class="admin-tab" data-tab="create-course">Create Course</button>
+                    </div>
+
+                    <div class="admin-content">
+                        <!-- Manage Courses -->
+                        <div id="manage-courses" class="admin-pane active">
+                            <div class="admin-filters">
+                                <button class="admin-filter-btn active" data-filter="all">All Courses</button>
+                                <button class="admin-filter-btn" data-filter="open">Open for Registration</button>
+                                <button class="admin-filter-btn" data-filter="in-progress">In Progress</button>
+                                <button class="admin-filter-btn" data-filter="completed">Completed</button>
+                            </div>
+                            <div class="admin-courses" id="admin-courses-list"></div>
+                        </div>
+
+                        <!-- Create Course -->
+                        <div id="create-course" class="admin-pane">
+                            <form id="course-form">
+                                <div class="form-group">
+                                    <label for="course-name">Course Name:</label>
+                                    <input type="text" id="course-name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="course-code">Course Code:</label>
+                                    <input type="text" id="course-code" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="course-category">Category:</label>
+                                    <select id="course-category" required>
+                                        <option value="programming">Programming</option>
+                                        <option value="databases">Databases</option>
+                                        <option value="networking">Networking</option>
+                                        <option value="security">Security</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="course-description">Description:</label>
+                                    <textarea id="course-description" rows="3" required></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="course-prerequisites">Prerequisites (comma separated):</label>
+                                    <input type="text" id="course-prerequisites">
+                                </div>
+                                <div class="form-group">
+                                    <label for="course-status">Status:</label>
+                                    <select id="course-status" required>
+                                        <option value="open">Open for Registration</option>
+                                        <option value="in-progress">In Progress</option>
+                                        <option value="completed">Completed</option>
+                                    </select>
+                                </div>
+                                <h4>Add Class</h4>
+                                <div class="class-form">
+                                    <div class="form-group">
+                                        <label for="class-id">Class ID:</label>
+                                        <input type="text" id="class-id" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="class-instructor">Instructor:</label>
+                                        <input type="text" id="class-instructor" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="class-schedule">Schedule:</label>
+                                        <input type="text" id="class-schedule" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="class-capacity">Capacity:</label>
+                                        <input type="number" id="class-capacity" min="1" required>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn-primary">Create Course</button>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Instructor Section -->
+                <section class="instructor-section" id="instructor-section">
+                    <h3>Instructor Dashboard</h3>
+                    <div class="instructor-tabs">
+                        <button class="instructor-tab active" data-tab="current-classes">My Classes</button>
+                        <button class="instructor-tab" data-tab="grading-history">Grading History</button>
+                    </div>
+                    <div class="instructor-content">
+                        <div id="current-classes" class="instructor-pane active">
+                            <div class="instructor-classes" id="instructor-classes-list"></div>
+                        </div>
+                        <div id="grading-history" class="instructor-pane">
+                            <p>Your past grading activity will appear here.</p>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <script src="client.js"></script>
+</body>
+</html>
