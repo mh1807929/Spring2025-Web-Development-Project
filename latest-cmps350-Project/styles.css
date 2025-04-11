@@ -778,3 +778,49 @@ body {
 .submit-grade-btn:hover {
     background-color: #27ae60;
 }
+
+/* schedule styles: */ 
+
+#schedule-grid {
+    margin-top: 20px;
+}
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+li {
+    background-color: #f9f9f9;
+    margin: 5px 0;
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+#display-schedule-btn {
+    background-color: #007bff; 
+    color: white; 
+    border: none; 
+    padding: 10px 20px; 
+    font-size: 16px; 
+    border-radius: 5px; 
+    cursor: pointer; 
+    transition: background-color 0.3s ease, transform 0.3s ease; 
+    outline: none; 
+    margin-top: 20px;
+}
+
+#display-schedule-btn:hover {
+    background-color: #0056b3; 
+    transform: scale(1.05); 
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+}
+
+#display-schedule-btn:active {
+    transform: scale(0.95); 
+    box-shadow: none; 
+}
+.week-schudle-section {
+    margin-top: 2rem;
+    background: white;
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+  }

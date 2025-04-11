@@ -1003,3 +1003,93 @@ function submitGrade(e) {
     // Refresh the instructor view
     loadInstructorClasses();
 }
+
+
+// Use case 8: 
+
+
+const displayScheduleBtn = document.getElementById('display-schedule-btn');
+const scheduleGrid = document.getElementById('schedule-grid');
+
+
+function displayWeeklySchedule(Data) {
+    if (!currentUser || currentUser.role !== 'admin') {
+        alert('Only administrators can view the schedule.');
+        return;
+    }
+
+    const schedule = {};
+
+     // Extract the courses which are in progess this week:
+
+    Data.courses
+    .filter(course => course.status === "open")
+    .forEach(course => {
+        course.classes.forEach(cls => {
+            if (cls.schedule) {
+                const [days, timeRange] = cls.schedule.split(" ");
+                const daysArray = days.split("/");
+
+                daysArray.forEach(day => {
+                    if (!schedule[day]) {
+                        schedule[day] = [];
+                    }
+
+                    schedule[day].push({
+                        time: timeRange,
+                        courseName: course.name,
+                        instructor: cls.instructor
+                    });
+                });
+            }
+        });
+    });
+
+// Display the schedule in the grid:
+
+scheduleGrid.innerHTML = '';
+if (Object.keys(schedule).length === 0) {
+    scheduleGrid.innerHTML = '<p>No courses in progress this week.</p>';
+    return;
+}
+
+Object.keys(schedule).forEach(day => {
+    const dayHeader = document.createElement('h3');
+    dayHeader.textContent = day;
+    scheduleGrid.appendChild(dayHeader);
+
+    const daySchedule = document.createElement('ul');
+    schedule[day].forEach(entry => {
+        const listItem = document.createElement('li');
+        listItem.textContent = `${entry.time} - ${entry.courseName} (Instructor: ${entry.instructor})`;
+        daySchedule.appendChild(listItem);
+    });
+
+    scheduleGrid.appendChild(daySchedule);
+});
+}
+
+// Loading data: 
+
+async function loadDataCourses() {
+try {
+    console.log('Loading data...');
+    const response = await fetch('./data/courses.json');
+    const coursesData = await response.json();
+    return coursesData;
+} catch (error) {
+    console.error('Failed to load courses:', error);
+}
+}
+
+// Setup event listener:
+
+document.addEventListener('DOMContentLoaded', async () => {
+const data = await loadDataCourses();
+
+if (data) {
+    displayScheduleBtn.addEventListener('click', () => displayWeeklySchedule(data));
+} else {
+    scheduleGrid.innerHTML = '<p>Failed to load course data.</p>';
+}
+});
