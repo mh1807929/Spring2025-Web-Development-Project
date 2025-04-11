@@ -824,3 +824,117 @@ li {
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
   }
+  #display-publish-courses-btn {
+    display: inline-block;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    outline: none;
+    margin-top: 20px;
+    max-width: 200px;
+  }
+  
+  #display-publish-courses-btn:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  #admin-usecase7-section {
+    display: none;
+}
+/* Add to your existing CSS */
+
+/* Use Case 7 Styles */
+.admin-tabs, .instructor-tabs {
+    display: flex;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #ddd;
+}
+
+.admin-tab, .instructor-tab {
+    padding: 8px 15px;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.admin-tab.active, .instructor-tab.active {
+    border-bottom: 2px solid #2c3e50;
+    color: #2c3e50;
+}
+
+.admin-pane, .instructor-pane {
+    display: none;
+    padding: 15px;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+.admin-pane.active, .instructor-pane.active {
+    display: block;
+}
+
+.preference-course, .assignment-course {
+    padding: 15px;
+    margin-bottom: 15px;
+    border: 1px solid #eee;
+    border-radius: 4px;
+}
+
+.interest-course {
+    padding: 15px;
+    margin-bottom: 15px;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+}
+
+.express-interest-btn {
+    padding: 5px 10px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.express-interest-btn:disabled {
+    background-color: #95a5a6;
+    cursor: not-allowed;
+}
+
+.instructor-select {
+    padding: 5px;
+    margin-left: 10px;
+    min-width: 200px;
+}
+
+.class-assignment {
+    margin: 10px 0;
+    padding: 10px;
+    background-color: #f5f5f5;
+    border-radius: 3px;
+}
+
+#finalize-assignments-btn {
+    margin-top: 15px;
+    padding: 8px 15px;
+    background-color: #27ae60;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+#finalize-assignments-btn:hover {
+    background-color: #219653;
+}

@@ -40,6 +40,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         if (currentUser.role === 'admin') {
             setupAdminPanel();
+            setupUseCase7AdminView();
+            loadDataCourses();
         }
 
         if (currentUser.role === 'instructor') {
@@ -1003,6 +1005,112 @@ function submitGrade(e) {
     // Refresh the instructor view
     loadInstructorClasses();
 }
+
+
+
+// Use case 7:
+
+document.addEventListener('DOMContentLoaded', () => {
+    setupUseCase7AdminView();
+  });
+
+
+  function setupUseCase7AdminView() {
+    // Get the admin section element
+    const adminSection = document.getElementById('admin-usecase7-section');
+
+    if (!adminSection) {
+        console.error('Element with ID "admin-usecase7-section" not found.');
+        return;
+      }
+
+      // Hide the section by default
+      adminSection.style.display = 'none';
+
+      // Check if the current user exists and is an admin
+      if (!currentUser || currentUser.role !== 'admin') {
+        console.log('User is not an admin. Section hidden.');
+        return; 
+      }
+
+      // Show the section only for admins
+      console.log('User is an admin. Section shown.');
+      adminSection.style.display = 'block';
+
+    // Load course data and set up functionality for admins
+    loadCoursesData().then(() => {
+        renderCoursesForPublishing();
+        const publishBtn = document.getElementById('publish-courses-btn');
+        if (publishBtn) {
+            publishBtn.addEventListener('click', publishSelectedCourses);
+        }
+    });
+}
+ 
+let all_Courses = []; 
+
+// Fetch course data from JSON
+async function loadCoursesData() {
+  const response = await fetch('./data/courses.json');
+  const data = await response.json();
+  all_Courses = data.courses;
+  renderCoursesForPublishing();
+}
+
+function renderCoursesForPublishing() {
+    const courseList = document.getElementById('course-list');
+    courseList.innerHTML = ''; 
+  
+    // Show only draft courses
+    const draftCourses = allCourses.filter(course => course.status === 'draft');
+  
+    if (draftCourses.length === 0) {
+      courseList.innerHTML = '<li>No draft courses to publish.</li>';
+      return;
+    }
+  
+    draftCourses.forEach(course => {
+      const li = document.createElement('li');
+  
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.id = course.id;
+  
+      const label = document.createElement('label');
+      label.htmlFor = course.id;
+      label.textContent = `${course.name} (${course.status})`;
+  
+      li.appendChild(checkbox);
+      li.appendChild(label);
+      courseList.appendChild(li);
+    });
+  }
+  
+
+// Handle publish button click
+function publishSelectedCourses() {
+  const checkboxes = document.querySelectorAll('#course-list input[type="checkbox"]');
+  checkboxes.forEach(checkbox => {
+    const course = all_Courses.find(c => c.id === checkbox.id);
+    if (checkbox.checked) {
+      course.status = 'open';
+    } else {
+      course.status = 'draft';
+    }
+  });
+
+  renderCoursesForPublishing(); // Update status display
+  alert('Selected courses have been published!');
+}
+
+
+// Setup on page load
+document.addEventListener('DOMContentLoaded', async () => {
+  await loadCoursesData();
+  document.getElementById('publish-courses-btn').addEventListener('click', publishSelectedCourses);
+});
+
+
 
 
 // Use case 8: 
