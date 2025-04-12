@@ -8,7 +8,7 @@
             "id": "20201234",
             "completedCourses": [
                 {"code": "CMPS151", "name": "Introduction to Programming", "grade": "A"},
-                {"code": "CMPS152", "name": "Object Oriented Programming", "grade": "B+"}
+                {"code": "CMPS251", "name": "Object Oriented Programming", "grade": "B+"}
             ]
         },
         {
@@ -19,7 +19,18 @@
             "id": "20201235",
             "completedCourses": [
                 {"code": "CMPS151", "name": "Introduction to Programming", "grade": "A"},
-                {"code": "CMPS152", "name": "Object Oriented Programming", "grade": "B+"}
+                {"code": "CMPS251", "name": "Object Oriented Programming", "grade": "B+"}
+            ]
+        },
+        {
+            "username": "ali",
+            "password": "ali123",
+            "name": "ali khalid",
+            "role": "student",
+            "id": "20210883",
+            "completedCourses": [
+                {"code": "CMPS151", "name": "Introduction to Programming", "grade": "A"},
+                {"code": "CMPS251", "name": "Object Oriented Programming", "grade": "B+"}
             ]
         },
         {

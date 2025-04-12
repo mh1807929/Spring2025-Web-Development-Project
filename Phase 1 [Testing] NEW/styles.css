@@ -408,37 +408,6 @@ body {
     color: var(--dark-color);
   }
 
-/* Admin Section */
-.admin-section {
-    display: none; /* Hidden by default */
-    margin-top: 2rem;
-    padding: 1.5rem;
-    background: white;
-    border-radius: var(--border-radius);
-}
-
-.admin-actions {
-    display: flex;
-    gap: 1rem;
-    margin-top: 1rem;
-}
-
-.admin-btn {
-    padding: 0.8rem 1.2rem;
-    background-color: var(--primary-color);
-    color: white;
-    border: none;
-    border-radius: var(--border-radius);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.admin-btn:hover {
-    background-color: var(--secondary-color);
-}
-
 /* Registration Button */
 .register-btn {
     background-color: var(--primary-color);
@@ -504,4 +473,594 @@ body {
     display: block;  
 }
 
+/* Admin Panel Styles */
+.admin-section {
+    margin-top: 2rem;
+    background: white;
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    display: none; /* Hidden by default, shown only for admins */
+}
 
+.admin-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 0.5rem;
+}
+
+.admin-tab {
+    padding: 0.5rem 1rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.3s;
+}
+
+.admin-tab:hover {
+    background-color: var(--light-color);
+}
+
+.admin-tab.active {
+    background-color: var(--dark-color);
+    color: white;
+}
+
+.admin-pane {
+    display: none;
+}
+
+.admin-pane.active {
+    display: block;
+}
+
+.admin-filters {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.admin-filter-btn {
+    padding: 0.5rem 1rem;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.admin-filter-btn.active {
+    background-color: var(--dark-color);
+    color: white;
+    border-color: var(--dark-color);
+}
+
+.admin-filter-btn:hover {
+    border-color: var(--dark-color);
+}
+
+.admin-course-card {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: var(--border-radius);
+    margin-bottom: 1rem;
+    overflow: hidden;
+}
+
+.admin-course-header {
+    padding: 1rem;
+    background-color: var(--dark-color);
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.admin-course-body {
+    padding: 1rem;
+}
+
+.admin-course-status {
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+}
+
+.admin-course-status.open {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.admin-course-status.in-progress {
+    background-color: var(--warning-color);
+    color: white;
+}
+
+.admin-course-status.completed {
+    background-color: var(--success-color);
+    color: white;
+}
+
+.admin-class-card {
+    background-color: var(--light-color);
+    border-radius: var(--border-radius);
+    padding: 1rem;
+    margin-top: 1rem;
+}
+
+.admin-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.validate-btn {
+    background-color: var(--success-color);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.cancel-class-btn {
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* Form Styles */
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: var(--border-radius);
+}
+
+.class-form {
+    background-color: var(--light-color);
+    padding: 1rem;
+    border-radius: var(--border-radius);
+    margin-bottom: 1.5rem;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: var(--secondary-color);
+}
+
+/* Instructor Panel Styles */
+.instructor-section {
+    margin-top: 2rem;
+    background: white;
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    display: none; /* Hidden by default, shown only for instructors */
+}
+
+.instructor-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 0.5rem;
+}
+
+.instructor-tab {
+    padding: 0.5rem 1rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.3s;
+}
+
+.instructor-tab:hover {
+    background-color: var(--light-color);
+}
+
+.instructor-tab.active {
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+.instructor-pane {
+    display: none;
+}
+
+.instructor-pane.active {
+    display: block;
+}
+
+.instructor-class-card {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: var(--border-radius);
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+}
+
+.instructor-class-header {
+    padding: 1rem;
+    background-color: var(--secondary-color);
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.instructor-class-body {
+    padding: 1.5rem;
+}
+
+.student-list {
+    margin-top: 1.5rem;
+    background-color: var(--light-color);
+    padding: 1rem;
+    border-radius: var(--border-radius);
+}
+
+.student-list h5 {
+    margin-bottom: 1rem;
+    color: var(--dark-color);
+}
+
+.grades-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+.grades-table th, 
+.grades-table td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.grades-table th {
+    background-color: #f9f9f9;
+    font-weight: 600;
+}
+
+.grade-input-group {
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* Add to your CSS file */
+.class-form {
+    background-color: var(--light-color);
+    padding: 1rem;
+    border-radius: var(--border-radius);
+    margin-bottom: 1rem;
+    position: relative;
+}
+
+.remove-class-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    padding: 0.5rem;
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1.5rem;
+}
+
+.classes-container {
+    margin-bottom: 1.5rem;
+}
+
+.message {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 24px;
+    border-radius: 4px;
+    font-weight: 500;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.message.show {
+    opacity: 1;
+}
+
+.message.error {
+    background-color: #ffebee;
+    color: #c62828;
+    border: 1px solid #ef9a9a;
+}
+
+.message.success {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+    border: 1px solid #a5d6a7;
+}
+
+.message {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 15px 25px;
+    border-radius: 5px;
+    font-weight: 500;
+    z-index: 1000; /* Ensure it appears above other elements */
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.message.show {
+    opacity: 1;
+}
+
+.message.error {
+    background-color: #ffebee;
+    color: #c62828;
+    border: 1px solid #ef9a9a;
+}
+
+/* Instructor Section */
+.instructor-section {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.instructor-class-card {
+    background: #f8f9fa;
+    border-radius: 6px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.instructor-class-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.class-meta {
+    text-align: right;
+    font-size: 0.9em;
+    color: #666;
+}
+
+.class-meta span {
+    display: block;
+}
+
+.grades-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.grades-table th, 
+.grades-table td {
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+}
+
+.grade-input-group {
+    display: flex;
+    gap: 8px;
+}
+
+.grade-select {
+    padding: 5px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+.save-grade-btn {
+    padding: 5px 10px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#schedule-grid {
+    margin-top: 20px;
+}
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+li {
+    background-color: #f9f9f9;
+    margin: 5px 0;
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+#display-schedule-btn {
+    background-color: #007bff; 
+    color: white; 
+    border: none; 
+    padding: 10px 20px; 
+    font-size: 16px; 
+    border-radius: 5px; 
+    cursor: pointer; 
+    transition: background-color 0.3s ease, transform 0.3s ease; 
+    outline: none; 
+    margin-top: 20px;
+}
+
+#display-schedule-btn:hover {
+    background-color: #0056b3; 
+    transform: scale(1.05); 
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+}
+
+#display-schedule-btn:active {
+    transform: scale(0.95); 
+    box-shadow: none; 
+}
+.week-schudle-section {
+    margin-top: 2rem;
+    background: white;
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+  }
+  #display-publish-courses-btn {
+    display: inline-block;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    outline: none;
+    margin-top: 20px;
+    max-width: 200px;
+  }
+  
+  #display-publish-courses-btn:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  #admin-usecase7-section {
+    display: none;
+}
+/* Add to your existing CSS */
+
+/* Use Case 7 Styles */
+.admin-tabs, .instructor-tabs {
+    display: flex;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #ddd;
+}
+
+.admin-tab, .instructor-tab {
+    padding: 8px 15px;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.admin-tab.active, .instructor-tab.active {
+    border-bottom: 2px solid #2c3e50;
+    color: white;
+}
+
+.admin-pane, .instructor-pane {
+    display: none;
+    padding: 15px;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+.admin-pane.active, .instructor-pane.active {
+    display: block;
+}
+
+.preference-course, .assignment-course {
+    padding: 15px;
+    margin-bottom: 15px;
+    border: 1px solid #eee;
+    border-radius: 4px;
+}
+
+.interest-course {
+    padding: 15px;
+    margin-bottom: 15px;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+}
+
+.express-interest-btn {
+    padding: 5px 10px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.express-interest-btn:disabled {
+    background-color: #95a5a6;
+    cursor: not-allowed;
+}
+
+.instructor-select {
+    padding: 5px;
+    margin-left: 10px;
+    min-width: 200px;
+}
+
+.class-assignment {
+    margin: 10px 0;
+    padding: 10px;
+    background-color: #f5f5f5;
+    border-radius: 3px;
+}
+
+#finalize-assignments-btn {
+    margin-top: 15px;
+    padding: 8px 15px;
+    background-color: #27ae60;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+#finalize-assignments-btn:hover {
+    background-color: #219653;
+}

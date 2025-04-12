@@ -31,7 +31,7 @@
             </div>
         </div>
 
-        <!-- Main App (hidden until login) -->
+        <!-- Main App -->
         <div class="app-main" id="app-main">
             <header class="app-header">
                 <div class="header-left">
@@ -68,7 +68,7 @@
 
                 <div id="registration-message" class="message"></div>
 
-                <!-- Learning Path Section (for students) -->
+                <!-- Learning Path Section -->
                 <section class="learning-path-section" id="learning-path-section">
                     <h3>My Learning Path</h3>
                     <div class="path-tabs">
@@ -83,50 +83,155 @@
                     </div>
                 </section>
 
-                <!-- Admin Panel (visible for admins only) -->
-<!-- Admin Panel (visible for admins only) -->
+                <!-- Admin Panel -->
 <section class="admin-section" id="admin-section">
-    <h3>Admin Controls</h3>
-    <div class="admin-actions">
-        <button class="admin-btn" onclick="createNewCourse()">
-            <i class="fas fa-plus-circle"></i> Create New Course
-        </button>
+    <h3>Admin Dashboard</h3>
+
+    <div class="admin-tabs">
+        <button class="admin-tab active" data-tab="manage-courses">Manage Courses</button>
+        <button class="admin-tab" data-tab="create-course">Create Course</button>
     </div>
-</section>
 
+    <div id="admin-message" class="message"></div>
 
-<!-- Courses Grid Display -->
-<section class="courses-section">
-    <h3>Available Courses</h3>
-    <div class="courses-grid" id="courses-grid">
-        <!-- Dynamic content will be loaded here -->
-    </div>
-</section>
+    <div class="admin-content">
+        <!-- Manage Courses -->
+        <div id="manage-courses" class="admin-pane active">
+            <div class="admin-filters">
+                <button class="admin-filter-btn active" data-filter="all">All Courses</button>
+                <button class="admin-filter-btn" data-filter="open">Open for Registration</button>
+                <button class="admin-filter-btn" data-filter="in-progress">In Progress</button>
+                <button class="admin-filter-btn" data-filter="completed">Completed</button>
+            </div>
+            <div class="admin-courses" id="admin-courses-list"></div>
+        </div>
 
-
-                <!-- Add this inside <main class="app-content"> -->
-                <section class="learning-path-section" id="learning-path-section">
-                <h3>My Learning Path</h3>
-                <div class="path-tabs">
-                    <button class="path-tab active" data-tab="completed">Completed</button>
-                    <button class="path-tab" data-tab="in-progress">In Progress</button>
-                    <button class="path-tab" data-tab="pending">Pending</button>
-                </div>  
-                <div class="path-content">
-                    <div id="completed-courses" class="path-pane active"></div>
-                    <div id="in-progress-courses" class="path-pane"></div>
-                    <div id="pending-courses" class="path-pane"></div>
+        <!-- Create Course -->
+        <div id="create-course" class="admin-pane">
+            <form id="course-form">
+                <div class="form-group">
+                    <label for="course-name">Course Name:</label>
+                    <input type="text" id="course-name" required>
                 </div>
+                <div class="form-group">
+                    <label for="course-code">Course Code:</label>
+                    <input type="text" id="course-code" required>
+                </div>
+                <div class="form-group">
+                    <label for="course-category">Category:</label>
+                    <select id="course-category" required>
+                        <option value="programming">Programming</option>
+                        <option value="databases">Databases</option>
+                        <option value="networking">Networking</option>
+                        <option value="security">Security</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="course-description">Description:</label>
+                    <textarea id="course-description" rows="3" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="course-prerequisites">Prerequisites (comma separated):</label>
+                    <input type="text" id="course-prerequisites">
+                </div>
+                <div class="form-group">
+                    <label for="course-status">Status:</label>
+                    <select id="course-status" required>
+                        <option value="open">Open for Registration</option>
+                        <option value="in-progress">In Progress</option>
+                        <option value="completed">Completed</option>
+                    </select>
+                </div>
+                
+                <h4>Classes</h4>
+                <div class="classes-container" id="classes-container">
+                    <!-- Class forms will be added here dynamically -->
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" id="add-class-btn" class="btn-secondary">
+                        <i class="fas fa-plus"></i> Add Another Class
+                    </button>
+                    <button type="submit" class="btn-primary">Create Course</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+                <!-- Admin Section for Use Case 7 -->
+            <section id="admin-usecase7-section" class="week-schudle-section">
+                <h3>Course-Instructor Assignment System</h3>
+                
+                <div class="admin-tabs">
+                    <button class="admin-tab active" data-tab="publish-courses">Publish Courses</button>
+                    <button class="admin-tab" data-tab="view-preferences">View Preferences</button>
+                    <button class="admin-tab" data-tab="assign-instructors">Assign Instructors</button>
+                </div>
+                
+                        <div class="admin-content">
+                            <!-- Publish Courses Tab -->
+                            <div id="publish-courses" class="admin-pane active">
+                                <h4>Publish Draft Courses for Instructor Preferences</h4>
+                                <ul id="course-list"></ul>
+                                <button id="display-publish-courses-btn">Publish Selected Courses</button>
+                                <p id="admin-success-msg" style="display: none; color: green; font-weight: bold; margin-top: 10px;">
+                                    Courses published successfully!
+                                </p>
+                            </div>
+                            
+                            <!-- View Preferences Tab -->
+                            <div id="view-preferences" class="admin-pane">
+                                <h4>Instructor Preferences</h4>
+                                <div id="preferences-summary"></div>
+                            </div>
+                            
+                            <!-- Assign Instructors Tab -->
+                            <div id="assign-instructors" class="admin-pane">
+                                <h4>Assign Instructors to Courses</h4>
+                                <div id="assignment-interface"></div>
+                                <button id="finalize-assignments-btn" class="hidden">Finalize Assignments</button>
+                            </div>
+                        </div>
+                    </section>
+                <!-- Instructor Section -->
+                <section class="instructor-section" id="instructor-section">
+                    <h3>Instructor Dashboard</h3>
+                    <div class="instructor-tabs">
+                        <button class="instructor-tab active" data-tab="current-classes">My Classes</button>
+                    </div>
+                    <div class="instructor-content">
+                        <div id="current-classes" class="instructor-pane active">
+                            <div class="instructor-classes" id="instructor-classes-list"></div>
+                        </div>
+                        <div id="grading-history" class="instructor-pane">
+                            <p>Your past grading activity will appear here.</p>
+                        </div>
+                    </div>
                 </section>
-                <section class="week-schudle-section" id="week-schudle-section">
+                <!-- Instructor Interest Section -->
+                <section id="instructor-interest-section" class="week-schudle-section">
+                    <h3>Courses Available for Expression of Interest</h3>
+                    <div class="instructor-tabs">
+                        <button class="instructor-tab active" data-tab="available-courses">Available Courses</button>
+                        <button class="instructor-tab" data-tab="my-preferences">My Preferences</button>
+                    </div>
+                    
+                    <div class="instructor-content">
+                        <div id="available-courses" class="instructor-pane active">
+                            <ul id="interest-course-list"></ul>
+                        </div>
+                        <div id="my-preferences" class="instructor-pane">
+                            <div id="my-preferences-list"></div>
+                        </div>
+                    </div>
+                </section>
+                <section class="week-schudle-section"  id="admin-section_week">
                     <h3>Weekly Course Schedule</h3>
                     <div class="path-tabs">
-                        <button id="display-schedule-btn" class="admin-btn">Display Weekly Schedule</button>
-                      
-                    <div class="schedule-grid" id="schedule-grid">
+                        <button id="display-schedule-btn">Display Weekly Schedule</button>
                     </div>
-                    </section>
-
+                    <div class="schedule-grid" id="schedule-grid"></div>
+                </section>
             </main>
         </div>
     </div>
