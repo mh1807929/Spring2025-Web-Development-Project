@@ -330,40 +330,70 @@ async function handleRegistration(e) {
     const classId = e.target.dataset.class;
     
     const course = allCourses.find(c => c.code === courseCode);
-    const cls = course.classes.find(c => c.classId === classId);
-    
-    // Check prerequisites
-    if (!checkPrerequisites(currentUser, course)) {
-        showMessage(`You must complete all prerequisites for ${course.name}`, 'error');
+    if (!course) {
+        showMessage('Course not found', 'error');
         return;
     }
     
-    // Check capacity
+    const cls = course.classes.find(c => c.classId === classId);
+    if (!cls) {
+        showMessage('Class not found', 'error');
+        return;
+    }
+
+    if (course.status !== 'open') {
+        showMessage(`Course ${course.name} is not currently open for registration`, 'error');
+        return;
+    }
+
+    if (cls.status === 'cancelled') {
+        showMessage(`Class ${classId} has been cancelled`, 'error');
+        return;
+    }
+
+    if (!checkPrerequisites(currentUser, course)) {
+        const missingPrereqs = course.prerequisites?.filter(preReq => 
+            !currentUser.completedCourses?.some(c => c.code === preReq)
+        ) || [];
+        
+        if (missingPrereqs.length > 0) {
+            const prereqCourses = missingPrereqs.map(code => {
+                const prereqCourse = allCourses.find(c => c.code === code);
+                return prereqCourse ? `${code} - ${prereqCourse.name}` : code;
+            }).join(', ');
+            
+            showMessage(`You cannot register for ${course.name} because you haven't completed these prerequisites: ${prereqCourses}`, 'error');
+        } else {
+            showMessage(`You cannot register for ${course.name} because you don't meet the prerequisite requirements`, 'error');
+        }
+        return;
+    }
+    
     if (cls.registeredStudents?.length >= cls.capacity) {
         showMessage(`Class ${classId} is full`, 'error');
         return;
     }
     
-    // Check if already registered
-    if (cls.registeredStudents?.some(r => r.studentId === currentUser.id)) {
-        showMessage(`You're already registered for this class`, 'error');
+    const existingRegistration = cls.registeredStudents?.find(r => r.studentId === currentUser.id);
+    if (existingRegistration) {
+        const statusMsg = existingRegistration.status === 'pending' ? 
+            'pending approval' : 'already registered';
+        showMessage(`You're ${statusMsg} for this class`, 'error');
         return;
     }
     
     try {
-        // Add registration with pending status
         if (!cls.registeredStudents) cls.registeredStudents = [];
         cls.registeredStudents.push({
             studentId: currentUser.id,
-            status: 'pending'
+            status: 'pending',
+            registrationDate: new Date().toISOString()
         });
         
-        // Update UI
         e.target.disabled = true;
         e.target.textContent = 'Pending Approval';
         showMessage(`Registration requested for ${course.name}. Waiting for admin approval.`, 'success');
         
-        // Save state
         localStorage.setItem('courseRegistrations', JSON.stringify(allCourses));
         displayLearningPath();
         
@@ -372,6 +402,7 @@ async function handleRegistration(e) {
         showMessage('Registration failed. Please try again.', 'error');
     }
 }
+
 
 // Check if student meets prerequisites
 function checkPrerequisites(student, course) {
