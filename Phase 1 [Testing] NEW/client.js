@@ -633,3 +633,65 @@ async function createNewCourse() {
     displayCourses(allCourses);  // Refresh the course display
     alert(`Course ${newCourse.name} created successfully!`);
 }
+
+
+// Use Case 8: Courses schedule
+const displayScheduleBtn = document.getElementById('display-schedule-btn');
+const scheduleGrid = document.getElementById('schedule-grid');
+
+// Display weekly course schedule
+function displayWeeklySchedule() {
+    if (!currentUser || currentUser.role !== 'admin') {
+        alert('Only administrators can view the schedule.');
+        return;
+    }
+
+    const schedule = {};
+
+    allCourses.forEach(course => {
+        if (course.status === 'in_progress' && course.classes) {
+            course.classes.forEach(cls => {
+                const { day, time } = cls.schedule || {};
+                if (day && time) {
+                    if (!schedule[day]) {
+                        schedule[day] = [];
+                    }
+                    schedule[day].push({
+                        courseName: course.name,
+                        instructor: cls.instructor,
+                        time: time
+                    });
+                }
+            });
+        }
+    });
+
+    // Display the schedule in the grid
+    scheduleGrid.innerHTML = '';
+    if (Object.keys(schedule).length === 0) {
+        scheduleGrid.innerHTML = '<p>No courses in progress this week.</p>';
+        return;
+    }
+
+    Object.keys(schedule).forEach(day => {
+        const dayHeader = document.createElement('h3');
+        dayHeader.textContent = day;
+        scheduleGrid.appendChild(dayHeader);
+
+        const daySchedule = document.createElement('ul');
+        schedule[day].forEach(entry => {
+            const listItem = document.createElement('li');
+            listItem.textContent = `${entry.time} - ${entry.courseName} (Instructor: ${entry.instructor})`;
+            daySchedule.appendChild(listItem);
+        });
+
+        scheduleGrid.appendChild(daySchedule);
+    });
+}
+
+// Setup event listener
+document.addEventListener('DOMContentLoaded', async () => {
+    await loadData();
+
+    displayScheduleBtn.addEventListener('click', displayWeeklySchedule);
+});
