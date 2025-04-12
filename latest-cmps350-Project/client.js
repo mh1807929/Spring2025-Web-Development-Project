@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Load session if exists
     const savedUser = sessionStorage.getItem('currentUser');
     if (savedUser) {
+        console.log('User session found');
         currentUser = JSON.parse(savedUser);
         loginScreen.style.display = 'none';
         appMain.style.display = 'block';
@@ -1028,7 +1029,7 @@ document.addEventListener('DOMContentLoaded', () => {
       adminSection.style.display = 'none';
 
       // Check if the current user exists and is an admin
-      if (!currentUser || currentUser.role !== 'admin') {
+      if (!currentUser || currentUser.role != 'admin') {
         console.log('User is not an admin. Section hidden.');
         return; 
       }

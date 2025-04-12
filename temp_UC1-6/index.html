@@ -158,7 +158,41 @@
         </div>
     </div>
 </section>
-
+                <!-- Admin Section for Use Case 7 -->
+            <section id="admin-usecase7-section" class="week-schudle-section">
+                <h3>Course-Instructor Assignment System</h3>
+                
+                <div class="admin-tabs">
+                    <button class="admin-tab active" data-tab="publish-courses">Publish Courses</button>
+                    <button class="admin-tab" data-tab="view-preferences">View Preferences</button>
+                    <button class="admin-tab" data-tab="assign-instructors">Assign Instructors</button>
+                </div>
+                
+                        <div class="admin-content">
+                            <!-- Publish Courses Tab -->
+                            <div id="publish-courses" class="admin-pane active">
+                                <h4>Publish Draft Courses for Instructor Preferences</h4>
+                                <ul id="course-list"></ul>
+                                <button id="display-publish-courses-btn">Publish Selected Courses</button>
+                                <p id="admin-success-msg" style="display: none; color: green; font-weight: bold; margin-top: 10px;">
+                                    Courses published successfully!
+                                </p>
+                            </div>
+                            
+                            <!-- View Preferences Tab -->
+                            <div id="view-preferences" class="admin-pane">
+                                <h4>Instructor Preferences</h4>
+                                <div id="preferences-summary"></div>
+                            </div>
+                            
+                            <!-- Assign Instructors Tab -->
+                            <div id="assign-instructors" class="admin-pane">
+                                <h4>Assign Instructors to Courses</h4>
+                                <div id="assignment-interface"></div>
+                                <button id="finalize-assignments-btn" class="hidden">Finalize Assignments</button>
+                            </div>
+                        </div>
+                    </section>
                 <!-- Instructor Section -->
                 <section class="instructor-section" id="instructor-section">
                     <h3>Instructor Dashboard</h3>
@@ -173,6 +207,30 @@
                             <p>Your past grading activity will appear here.</p>
                         </div>
                     </div>
+                </section>
+                <!-- Instructor Interest Section -->
+                <section id="instructor-interest-section" class="week-schudle-section">
+                    <h3>Courses Available for Expression of Interest</h3>
+                    <div class="instructor-tabs">
+                        <button class="instructor-tab active" data-tab="available-courses">Available Courses</button>
+                        <button class="instructor-tab" data-tab="my-preferences">My Preferences</button>
+                    </div>
+                    
+                    <div class="instructor-content">
+                        <div id="available-courses" class="instructor-pane active">
+                            <ul id="interest-course-list"></ul>
+                        </div>
+                        <div id="my-preferences" class="instructor-pane">
+                            <div id="my-preferences-list"></div>
+                        </div>
+                    </div>
+                </section>
+                <section class="week-schudle-section"  id="admin-section_week">
+                    <h3>Weekly Course Schedule</h3>
+                    <div class="path-tabs">
+                        <button id="display-schedule-btn">Display Weekly Schedule</button>
+                    </div>
+                    <div class="schedule-grid" id="schedule-grid"></div>
                 </section>
             </main>
         </div>

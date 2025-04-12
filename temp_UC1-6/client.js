@@ -22,6 +22,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const savedUser = sessionStorage.getItem('currentUser');
     if (savedUser) {
         currentUser = JSON.parse(savedUser);
+        console.log('DEBUG: CURRENT USER:', currentUser);
         loginScreen.style.display = 'none';
         appMain.style.display = 'block';
         welcomeMessage.textContent = `Welcome, ${currentUser.name}`;
@@ -1223,3 +1224,243 @@ function submitGrade(e) {
         applyFilters();
     }
 }
+
+// Use case 7:
+
+document.addEventListener('DOMContentLoaded', async () => {
+    await setupUseCase7AdminView();
+  });
+
+
+  async function setupUseCase7AdminView() {
+    // Get the admin section element
+    const adminSection = document.getElementById('admin-usecase7-section');
+
+    if (!adminSection) {
+        console.error('Element with ID "admin-usecase7-section" not found.');
+        return;
+      }
+
+      // Hide the section by default
+      adminSection.style.display = 'none';
+
+      // Show the section only for admins
+      console.log('User is an admin. Section shown.');
+      adminSection.style.display = 'block';
+
+    // Load course data and set up functionality for admins
+
+    let a = await loadDataCourses();
+    if(a) {
+        console.log('Courses loaded successfully:', a);
+        await renderCoursesForPublishing(a.courses.filter(course => course.status === 'draft'));
+        const publishBtn = document.getElementById('display-publish-courses-btn');
+        if (publishBtn) {
+            console.log('Publish button found. Adding event listener.');
+            let b = a.courses.filter(course => course.status === 'draft')
+            // publishBtn.addEventListener('click', publishSelectedCourses(b));
+            publishBtn.addEventListener('click', () => {
+                publishSelectedCourses(b);
+                b = b.filter(course => course.status === 'draft');
+                renderCoursesForPublishing(b);
+                publishSelectedCourses(d);
+            });
+        }
+    }
+}
+ 
+let all_Courses = []; 
+
+// Fetch course data from JSON
+async function loadCoursesData() {
+  const response = await fetch('./data/courses.json');
+  const data = await response.json();
+  all_Courses = data.courses;
+}
+
+async function renderCoursesForPublishing(draftCourses) {
+    console.log('Rendering courses for publishing...');
+    const courseList = document.getElementById('course-list');
+    courseList.innerHTML = ''; 
+  
+    // Show only draft courses
+    console.log('draftCourses:', draftCourses);
+  
+    if (draftCourses.length === 0) {
+      courseList.innerHTML = '<li>No draft courses to publish.</li>';
+      return;
+    }
+  
+    draftCourses.forEach(course => {
+      const li = document.createElement('li');
+  
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.id = course.code;
+  
+      const label = document.createElement('label');
+      label.htmlFor = course.code;
+      label.textContent = `${course.name} (${course.status})`;
+  
+      li.appendChild(checkbox);
+      li.appendChild(label);
+      courseList.appendChild(li);
+    });
+    
+  }
+  
+
+// Handle publish button click
+function publishSelectedCourses(d) {
+  const checkboxes = document.querySelectorAll('#course-list input[type="checkbox"]');
+  checkboxes.forEach(checkbox => {
+    const course = d.find(c => c.code === checkbox.id);
+    console.log('Course:', d);
+    console.log('Courses ID: ', course)
+    if (checkbox.checked) {
+      course.status = 'open';
+    } else {
+      course.status = 'draft';
+    }
+  });
+
+  alert('Selected courses have been published!');
+}
+
+function publishSelectedCourses_toInstructor() {
+    const instructorSection = document.getElementById('instructor-usecase7-section');
+    const instructorList = document.getElementById('instructor-course-list');
+    const publishedCourses = all_Courses.filter(course => course.status === 'open');
+  
+    if (publishedCourses.length === 0) {
+      instructorList.innerHTML = '<li>No published courses available.</li>';
+      return;
+    }
+  
+    publishedCourses.forEach(course => {
+      const li = document.createElement('li');
+      li.textContent = `${course.name} (${course.code}) - ${course.status}`;
+      instructorList.appendChild(li);
+    });
+  }
+  
+// Use case 8: 
+
+
+const displayScheduleBtn = document.getElementById('display-schedule-btn');
+const scheduleGrid = document.getElementById('schedule-grid');
+
+
+function displayWeeklySchedule(Data) {
+    const schedule = {};
+
+     // Extract the courses which are in progess this week:
+
+    Data.courses
+    .filter(course => course.status === "open")
+    .forEach(course => {
+        course.classes.forEach(cls => {
+            if (cls.schedule) {
+                const [days, timeRange] = cls.schedule.split(" ");
+                const daysArray = days.split("/");
+
+                daysArray.forEach(day => {
+                    if (!schedule[day]) {
+                        schedule[day] = [];
+                    }
+
+                    schedule[day].push({
+                        time: timeRange,
+                        courseName: course.name,
+                        instructor: cls.instructor
+                    });
+                });
+            }
+        });
+    });
+
+    // Display the schedule in the grid:
+
+    scheduleGrid.innerHTML = '';
+    if (Object.keys(schedule).length === 0) {
+        scheduleGrid.innerHTML = '<p>No courses in progress this week.</p>';
+        return;
+    }
+
+    Object.keys(schedule).forEach(day => {
+        const dayHeader = document.createElement('h3');
+        dayHeader.textContent = day;
+        scheduleGrid.appendChild(dayHeader);
+
+        const daySchedule = document.createElement('ul');
+        schedule[day].forEach(entry => {
+            const listItem = document.createElement('li');
+            listItem.textContent = `${entry.time} - ${entry.courseName} (Instructor: ${entry.instructor})`;
+            daySchedule.appendChild(listItem);
+        });
+
+        scheduleGrid.appendChild(daySchedule);
+});
+}
+
+// Loading data: 
+
+async function loadDataCourses() {
+try {
+    console.log('Loading data...');
+    const response = await fetch('./data/courses.json');
+    const coursesData = await response.json();
+    return coursesData;
+} catch (error) {
+    console.error('Failed to load courses:', error);
+}
+}
+
+// Setup event listener:
+document.addEventListener('submit', () => {
+    currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+
+    if (!currentUser || currentUser.role != 'admin') {
+        console.log('VERIFY 1: ' ,currentUser);
+        document.getElementById('admin-section_week').style.display = 'none';
+        document.getElementById('admin-usecase7-section').style.display = 'none';
+        document.getElementById('instructor-interest-section').style.display = 'none';
+    }
+    else{
+        console.log('VERIFY 2: ' ,currentUser);
+        document.getElementById('admin-section_week').style.display = 'block';
+        document.getElementById('admin-usecase7-section').style.display = 'block';
+        document.getElementById('instructor-interest-section').style.display = 'none';
+    }
+
+    if (currentUser.role === 'instructor') {
+        document.getElementById('instructor-interest-section').style.display = 'block';
+    }
+});
+
+document.addEventListener('DOMContentLoaded', async () => {
+    if (!currentUser || currentUser.role != 'admin') {
+        console.log('VERIFY 1: ' ,currentUser);
+        document.getElementById('admin-section_week').style.display = 'none';
+        document.getElementById('admin-usecase7-section').style.display = 'none';
+        document.getElementById('instructor-interest-section').style.display = 'none';
+    }
+    else{
+        console.log('VERIFY 2: ' ,currentUser);
+        document.getElementById('admin-section_week').style.display = 'block';
+        document.getElementById('admin-usecase7-section').style.display = 'block';
+        document.getElementById('instructor-interest-section').style.display = 'none';
+    }
+
+    if (currentUser.role === 'instructor') {
+        document.getElementById('instructor-interest-section').style.display = 'block';
+    }
+
+    const data = await loadDataCourses();
+
+    if (data) {
+        displayScheduleBtn.addEventListener('click', () => displayWeeklySchedule(data));
+    } else {
+        scheduleGrid.innerHTML = '<p>Failed to load course data.</p>';
+    }
+});
