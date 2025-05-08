@@ -1,0 +1,93 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String @id @default(uuid())
+  username String @unique
+  password String
+  name     String
+  role     String 
+
+  // Student specific fields
+  studentId         String?      @unique
+  registeredClasses Class[]      @relation("StudentClasses")
+  completedCourses  Completion[]
+
+  // Instructor specific fields
+  expertise       String?
+  assignedClasses Class[]          @relation("InstructorClasses")
+  interests       CourseInterest[]
+}
+
+model Course {
+  id            String @id @default(uuid())
+  code          String @unique
+  name          String
+  category      String
+  description   String
+  prerequisites String
+  status        String
+
+  classes     Class[]
+  interests   CourseInterest[]
+  completions Completion[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Class {
+  id       String @id @default(uuid())
+  classId  String @unique // e.g., "CMPS350-01"
+  schedule String
+  capacity Int
+
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  instructorId String?
+  instructor   User?   @relation("InstructorClasses", fields: [instructorId], references: [id])
+
+  registeredStudents User[] @relation("StudentClasses")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Completion {
+  id    String @id @default(uuid())
+  grade String
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  completedAt DateTime @default(now())
+
+  @@unique([userId, courseId])
+}
+
+model CourseInterest {
+  id String @id @default(uuid())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  expressedAt DateTime @default(now())
+
+  @@unique([userId, courseId])
+}
