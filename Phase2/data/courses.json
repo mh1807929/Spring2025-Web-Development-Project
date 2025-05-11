@@ -1,153 +1,152 @@
-{
-    "courses": [
+[
+    {
+      "code": "CMPS350",
+      "name": "Web Development",
+      "category": "Programming",
+      "description": "Fundamentals of web development including HTML, CSS, JavaScript and modern frameworks.",
+      "prerequisites": ["CMPS151", "CMPS251"],
+      "status": "open",
+      "interestedInstructors": [],
+      "classes": [
         {
-            "code": "CMPS350",
-            "name": "Web Development",
-            "category": "Programming",
-            "description": "Fundamentals of web development including HTML, CSS, JavaScript and modern frameworks.",
-            "prerequisites": ["CMPS151", "CMPS251"],
-            "status": "open",
-            "interestedInstructors": [],
-            "classes": [
-                {
-                    "classId": "CMPS350-01",
-                    "instructor": "Dr. Ali Khan",
-                    "schedule": "Mon/Wed 10:00-11:15",
-                    "capacity": 30,
-                    "registeredStudents": ["20201234"]
-                }
-            ]
-        },
-        {
-            "code": "CMPS251",
-            "name": "object-oriented-programming",
-            "category": "Programming",
-            "description": "object programming using java.",
-            "prerequisites": ["CMPS151"],
-            "status": "open",
-            "interestedInstructors": [],
-            "classes": [
-                {
-                    "classId": "CMPS251-01",
-                    "instructor": "Dr. Ali Khan",
-                    "schedule": "Mon/Wed 10:00-11:15",
-                    "capacity": 30,
-                    "registeredStudents": ["20201234"]
-                },
-                {
-                    "classId": "CMPS251-02",
-                    "instructor": "Dr. ahmed",
-                    "schedule": "Mon/Wed 9:30-10:45",
-                    "capacity": 25,
-                    "registeredStudents": []
-                }
-            ]
-        },
-        {
-            "code": "CMPS151",
-            "name": "programming-concepts",
-            "category": "Programming",
-            "description": "python based programming.",
-            "prerequisites": ["no prerequisites"],
-            "status": "open",
-            "classes": [
-                {
-                    "classId": "CMPS151-01",
-                    "instructor": "Dr. Ali Khan",
-                    "schedule": "Mon/Wed 10:00-11:15",
-                    "capacity": 30,
-                    "registeredStudents": ["20201234"]
-                }
-            ]
-        },
-        {
-            "code": "CMPS303",
-            "name": "Data Structures",
-            "category": "Programming",
-            "description": "Introduction to fundamental data structures.",
-            "prerequisites": ["CMPS251"],
-            "status": "open",
-            "classes": [
-                {
-                    "classId": "CMPS303-01",
-                    "instructor": "Dr. Sara Ahmed",
-                    "schedule": "Sun/Tue 08:30-09:45",
-                    "capacity": 25,
-                    "registeredStudents": []
-                }
-            ]
-        },
-        {
-            "code": "CMPS351",
-            "name": "Database Systems",
-            "category": "Databases",
-            "description": "Introduction to database management systems and SQL.",
-            "prerequisites": ["CMPS251"],
-            "status": "open",
-            "interestedInstructors": ["Dr. Ali Khan"],
-            "classes": [
-                {
-                    "classId": "CMPS351-01",
-                    "instructor": "Dr. Omar Mahmoud",
-                    "schedule": "Sun/Tue 13:00-14:15",
-                    "capacity": 20,
-                    "registeredStudents": []
-                }
-            ]
-        },
-        {
-            "code": "CMPS401",
-            "name": "Artificial Intelligence",
-            "category": "Advanced Programming",
-            "description": "Introduction to AI concepts including machine learning and neural networks.",
-            "prerequisites": ["CMPS303"],
-            "status": "draft",
-            "interestedInstructors": [],
-            "classes": [
-                {
-                    "classId": "CMPS401-01",
-                    "instructor": null,
-                    "schedule": "Tue/Thu 14:00-15:15",
-                    "capacity": 20,
-                    "registeredStudents": []
-                }
-            ]
-        },
-        {
-            "code": "CMPS402",
-            "name": "Cloud Computing",
-            "category": "Systems",
-            "description": "Introduction to cloud platforms and distributed systems.",
-            "prerequisites": ["CMPS350"],
-            "status": "draft",
-            "interestedInstructors": [],
-            "classes": [
-                {
-                    "classId": "CMPS402-01",
-                    "instructor": null,
-                    "schedule": "Wed/Fri 11:30-12:45",
-                    "capacity": 25,
-                    "registeredStudents": []
-                }
-            ]
-        },
-        {
-            "code": "CMPS403",
-            "name": "Cybersecurity",
-            "category": "Security",
-            "description": "Fundamentals of cybersecurity and ethical hacking.",
-            "prerequisites": ["CMPS351"],
-            "status": "draft",
-            "interestedInstructors": [],
-            "classes": [
-                {
-                    "classId": "CMPS403-01",
-                    "instructor": null,
-                    "schedule": "Mon/Wed 16:00-17:15",
-                    "capacity": 30,
-                    "registeredStudents": []
-                }
-            ]
+          "classId": "CMPS350-01",
+          "instructor": "Dr. Ali Khan",
+          "schedule": "Mon/Wed 10:00-11:15",
+          "capacity": 30,
+          "registeredStudents": ["20201234"]
         }
-    ]
-}
+      ]
+    },
+    {
+      "code": "CMPS251",
+      "name": "object-oriented-programming",
+      "category": "Programming",
+      "description": "object programming using java.",
+      "prerequisites": ["CMPS151"],
+      "status": "open",
+      "interestedInstructors": [],
+      "classes": [
+        {
+          "classId": "CMPS251-01",
+          "instructor": "Dr. Ali Khan",
+          "schedule": "Mon/Wed 10:00-11:15",
+          "capacity": 30,
+          "registeredStudents": ["20201234"]
+        },
+        {
+          "classId": "CMPS251-02",
+          "instructor": "Dr. Ahmed",
+          "schedule": "Mon/Wed 9:30-10:45",
+          "capacity": 25,
+          "registeredStudents": []
+        }
+      ]
+    },
+    {
+      "code": "CMPS151",
+      "name": "programming-concepts",
+      "category": "Programming",
+      "description": "python based programming.",
+      "prerequisites": ["no prerequisites"],
+      "status": "open",
+      "classes": [
+        {
+          "classId": "CMPS151-01",
+          "instructor": "Dr. Ali Khan",
+          "schedule": "Mon/Wed 10:00-11:15",
+          "capacity": 30,
+          "registeredStudents": ["20201234"]
+        }
+      ]
+    },
+    {
+      "code": "CMPS303",
+      "name": "Data Structures",
+      "category": "Programming",
+      "description": "Introduction to fundamental data structures.",
+      "prerequisites": ["CMPS251"],
+      "status": "open",
+      "classes": [
+        {
+          "classId": "CMPS303-01",
+          "instructor": "Dr. Sara Ahmed",
+          "schedule": "Sun/Tue 08:30-09:45",
+          "capacity": 25,
+          "registeredStudents": []
+        }
+      ]
+    },
+    {
+      "code": "CMPS351",
+      "name": "Database Systems",
+      "category": "Databases",
+      "description": "Introduction to database management systems and SQL.",
+      "prerequisites": ["CMPS251"],
+      "status": "open",
+      "interestedInstructors": ["Dr. Ali Khan"],
+      "classes": [
+        {
+          "classId": "CMPS351-01",
+          "instructor": "Dr. Omar Mahmoud",
+          "schedule": "Sun/Tue 13:00-14:15",
+          "capacity": 20,
+          "registeredStudents": []
+        }
+      ]
+    },
+    {
+      "code": "CMPS401",
+      "name": "Artificial Intelligence",
+      "category": "Advanced Programming",
+      "description": "Introduction to AI concepts including machine learning and neural networks.",
+      "prerequisites": ["CMPS303"],
+      "status": "draft",
+      "interestedInstructors": [],
+      "classes": [
+        {
+          "classId": "CMPS401-01",
+          "instructor": null,
+          "schedule": "Tue/Thu 14:00-15:15",
+          "capacity": 20,
+          "registeredStudents": []
+        }
+      ]
+    },
+    {
+      "code": "CMPS402",
+      "name": "Cloud Computing",
+      "category": "Systems",
+      "description": "Introduction to cloud platforms and distributed systems.",
+      "prerequisites": ["CMPS350"],
+      "status": "draft",
+      "interestedInstructors": [],
+      "classes": [
+        {
+          "classId": "CMPS402-01",
+          "instructor": null,
+          "schedule": "Wed/Fri 11:30-12:45",
+          "capacity": 25,
+          "registeredStudents": []
+        }
+      ]
+    },
+    {
+      "code": "CMPS403",
+      "name": "Cybersecurity",
+      "category": "Security",
+      "description": "Fundamentals of cybersecurity and ethical hacking.",
+      "prerequisites": ["CMPS351"],
+      "status": "draft",
+      "interestedInstructors": [],
+      "classes": [
+        {
+          "classId": "CMPS403-01",
+          "instructor": null,
+          "schedule": "Mon/Wed 16:00-17:15",
+          "capacity": 30,
+          "registeredStudents": []
+        }
+      ]
+    }
+  ]
+  
