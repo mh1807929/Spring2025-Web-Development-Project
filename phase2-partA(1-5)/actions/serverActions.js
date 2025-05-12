@@ -1,5 +1,5 @@
 'use server'
-import * as repo from '../lib/repository.js';
+import * as repo from '../../lib/repository.js';
 
 export async function getTotalUsersByRole(role) {
   return await repo.countUsersByRole(role);

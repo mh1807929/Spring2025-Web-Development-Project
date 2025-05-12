@@ -1,128 +1,112 @@
 import { PrismaClient } from '@prisma/client';
-import fs from 'fs';
+import fs from 'fs-extra';
 import path from 'path';
 
 const prisma = new PrismaClient();
 
-async function main() {
-  // Read JSON files
-  const usersData = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'data', 'users.json'), 'utf8'));
-  const coursesData = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'data', 'courses.json'), 'utf8'));
+async function seedUsers(usersData) {
+  console.log('🌱 Seeding users...');
+  for (const user of usersData.users) {
+    const existing = await prisma.user.findUnique({ where: { username: user.username } });
+    if (existing) {
+      console.log(`ℹ️ User ${user.username} already exists.`);
+      continue;
+    }
 
-  console.log('Seeding users...');
-  // Seed users
-  for (const userData of usersData.users) {
-    const { username, password, name, role } = userData;
-    
-    // Create base user
-    const user = await prisma.user.create({
+    const createdUser = await prisma.user.create({
       data: {
-        username,
-        password,  // In production, this should be hashed
-        name,
-        role,
+        username: user.username,
+        password: user.password,
+        name: user.name,
+        role: user.role,
       },
     });
-    
-    // Update with role-specific data
-    if (role === 'student') {
+
+    if (user.role === 'student') {
       await prisma.user.update({
-        where: { id: user.id },
+        where: { id: createdUser.id },
         data: {
-          studentId: userData.id,
+          studentId: user.id,
         },
       });
-      
-      // Add completed courses if any
-      if (userData.completedCourses && userData.completedCourses.length > 0) {
-        for (const completedCourse of userData.completedCourses) {
-          // Find course by code
-          const course = await prisma.course.findUnique({
-            where: { code: completedCourse.code },
-          });
-          
-          if (course) {
+
+      if (Array.isArray(user.completedCourses)) {
+        for (const course of user.completedCourses) {
+          const courseObj = await prisma.course.findUnique({ where: { code: course.code } });
+          if (courseObj) {
             await prisma.completion.create({
               data: {
-                userId: user.id,
-                courseId: course.id,
-                grade: completedCourse.grade,
+                userId: createdUser.id,
+                courseId: courseObj.id,
+                grade: course.grade,
               },
             });
           }
         }
       }
-    } else if (role === 'instructor') {
+    }
+
+    if (user.role === 'instructor' && user.expertise) {
       await prisma.user.update({
-        where: { id: user.id },
+        where: { id: createdUser.id },
         data: {
-          expertise: Array.isArray(userData.expertise) ? userData.expertise.join(',') : userData.expertise || '',
+          expertise: Array.isArray(user.expertise) ? user.expertise.join(',') : user.expertise,
         },
       });
     }
+
+    console.log(`✅ Created user: ${user.username}`);
   }
-  
-  console.log('Seeding courses...');
-  // Seed courses
-  for (const courseData of coursesData.courses) {
-    const { code, name, category, description, prerequisites, status, classes } = courseData;
-    
-    // Create course
-    const course = await prisma.course.create({
+}
+
+async function seedCourses(coursesData) {
+  console.log('🌱 Seeding courses...');
+  for (const course of coursesData.courses) {
+    const existing = await prisma.course.findUnique({ where: { code: course.code } });
+    if (existing) {
+      console.log(`ℹ️ Course ${course.code} already exists.`);
+      continue;
+    }
+
+    const createdCourse = await prisma.course.create({
       data: {
-        code,
-        name,
-        category,
-        description,
-        prerequisites: Array.isArray(prerequisites) ? prerequisites.join(',') : prerequisites || '',
-        status,
+        code: course.code,
+        name: course.name,
+        category: course.category,
+        description: course.description,
+        prerequisites: Array.isArray(course.prerequisites) ? course.prerequisites.join(',') : course.prerequisites,
+        status: course.status,
       },
     });
-    
-    // Create classes for this course
-    if (classes && classes.length > 0) {
-      for (const classData of classes) {
-        // Find instructor by name if provided
+
+    if (Array.isArray(course.classes)) {
+      for (const classData of course.classes) {
         let instructorId = null;
-        
         if (classData.instructor) {
           const instructor = await prisma.user.findFirst({
-            where: { 
-              name: classData.instructor,
-              role: 'instructor'
-            },
+            where: { name: classData.instructor, role: 'instructor' },
           });
-          
-          if (instructor) {
-            instructorId = instructor.id;
-          }
+          if (instructor) instructorId = instructor.id;
         }
-        
-        // Create class
-        const classObj = await prisma.class.create({
+
+        const createdClass = await prisma.class.create({
           data: {
             classId: classData.classId,
             schedule: classData.schedule,
             capacity: classData.capacity,
-            courseId: course.id,
+            courseId: createdCourse.id,
             instructorId,
           },
         });
-        
-        // Register students if any
-        if (classData.registeredStudents && classData.registeredStudents.length > 0) {
+
+        if (Array.isArray(classData.registeredStudents)) {
           for (const studentId of classData.registeredStudents) {
-            const student = await prisma.user.findFirst({
-              where: { studentId },
-            });
-            
+            const student = await prisma.user.findFirst({ where: { studentId } });
             if (student) {
               await prisma.class.update({
-                where: { id: classObj.id },
+                where: { id: createdClass.id },
                 data: {
-                  registeredStudents: {
-                    connect: { id: student.id },
-                  },
+                  registeredStudents: { connect: { id: student.id } },
                 },
               });
             }
@@ -130,161 +114,66 @@ async function main() {
         }
       }
     }
-    
-    // Add interested instructors if any
-    if (courseData.interestedInstructors && courseData.interestedInstructors.length > 0) {
-      for (const instructorName of courseData.interestedInstructors) {
+
+    if (Array.isArray(course.interestedInstructors)) {
+      for (const instructorName of course.interestedInstructors) {
         const instructor = await prisma.user.findFirst({
-          where: { 
-            name: instructorName,
-            role: 'instructor'
-          },
+          where: { name: instructorName, role: 'instructor' },
         });
-        
         if (instructor) {
           await prisma.courseInterest.create({
             data: {
               userId: instructor.id,
-              courseId: course.id,
+              courseId: createdCourse.id,
             },
           });
         }
       }
     }
-  }
 
-  // Generate additional data for statistics (500+ students, 50+ courses)
-  await generateAdditionalData();
-  
-  console.log('Seeding completed!');
+    console.log(`✅ Created course: ${course.code}`);
+  }
 }
 
-async function generateAdditionalData() {
-  console.log('Generating additional data for statistics...');
-  
-  // Generate course categories
-  const categories = [
-    'Programming', 
-    'Databases', 
-    'Networks', 
-    'Security', 
-    'Artificial Intelligence', 
-    'Machine Learning',
-    'Web Development',
-    'Mobile Development',
-    'Cloud Computing',
-    'Data Science'
-  ];
-  
-  // Generate additional courses (ensure we have at least 50)
-  const existingCoursesCount = await prisma.course.count();
-  const coursesToCreate = Math.max(0, 50 - existingCoursesCount);
-  
-  for (let i = 0; i < coursesToCreate; i++) {
-    const categoryIndex = Math.floor(Math.random() * categories.length);
-    const courseCode = `CMPS${500 + i}`;
-    const courseName = `${categories[categoryIndex]} ${i + 1}`;
-    
-    await prisma.course.create({
-      data: {
-        code: courseCode,
-        name: courseName,
-        category: categories[categoryIndex],
-        description: `Description for ${courseName}`,
-        prerequisites: 'CMPS151',
-        status: ['open', 'draft', 'in-progress'][Math.floor(Math.random() * 3)],
-      },
-    });
+async function seedRegistrations() {
+  const student = await prisma.user.findUnique({ where: { username: 'student1' } });
+  const course = await prisma.course.findUnique({ where: { code: 'CS101' } });
+
+  if (!student || !course) {
+    console.warn('⚠️ Missing required student or course for default registration.');
+    return;
   }
-  
-  // Generate additional students (ensure we have at least 500)
-  const existingStudentsCount = await prisma.user.count({
-    where: { role: 'student' }
+
+  const alreadyRegistered = await prisma.registration.findFirst({
+    where: { userId: student.id, courseId: course.id },
   });
-  const studentsToCreate = Math.max(0, 500 - existingStudentsCount);
-  
-  for (let i = 0; i < studentsToCreate; i++) {
-    const studentId = `202${10000 + i}`;
-    await prisma.user.create({
-      data: {
-        username: `student${i + existingStudentsCount}`,
-        password: 'password123',
-        name: `Student ${i + existingStudentsCount}`,
-        role: 'student',
-        studentId,
-      },
+
+  if (!alreadyRegistered) {
+    await prisma.registration.create({
+      data: { userId: student.id, courseId: course.id },
     });
+    console.log(`✅ Registered ${student.username} in ${course.code}`);
+  } else {
+    console.log(`ℹ️ ${student.username} already registered in ${course.code}`);
   }
-  
-  // Generate class registrations and completed courses for statistical data
-  const allStudents = await prisma.user.findMany({
-    where: { role: 'student' }
-  });
-  
-  const allCourses = await prisma.course.findMany();
-  const allClasses = await prisma.class.findMany();
-  
-  // Register students in classes (randomly)
-  for (const student of allStudents) {
-    const classesToRegister = Math.floor(Math.random() * 5) + 1; // 1-5 classes per student
-    const selectedClasses = new Set();
-    
-    for (let i = 0; i < classesToRegister; i++) {
-      const randomClass = allClasses[Math.floor(Math.random() * allClasses.length)];
-      if (!selectedClasses.has(randomClass.id)) {
-        selectedClasses.add(randomClass.id);
-        
-        try {
-          await prisma.class.update({
-            where: { id: randomClass.id },
-            data: {
-              registeredStudents: {
-                connect: { id: student.id }
-              }
-            }
-          });
-        } catch (error) {
-          // Skip if already registered
-        }
-      }
-    }
-  }
-  
-  // Add completed courses with grades
-  const grades = ['A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'F'];
-  
-  for (const student of allStudents) {
-    const completedCoursesCount = Math.floor(Math.random() * 10); // 0-9 completed courses
-    const completedCourses = new Set();
-    
-    for (let i = 0; i < completedCoursesCount; i++) {
-      const randomCourse = allCourses[Math.floor(Math.random() * allCourses.length)];
-      
-      if (!completedCourses.has(randomCourse.id)) {
-        completedCourses.add(randomCourse.id);
-        const randomGrade = grades[Math.floor(Math.random() * grades.length)];
-        
-        try {
-          await prisma.completion.create({
-            data: {
-              userId: student.id,
-              courseId: randomCourse.id,
-              grade: randomGrade
-            }
-          });
-        } catch (error) {
-          // Skip if already completed
-        }
-      }
-    }
-  }
-  
-  console.log('Additional data generation completed!');
+}
+
+async function main() {
+  console.log('📂 Reading data...');
+  const usersData = await fs.readJSON(path.join(process.cwd(), 'data/users.json'));
+  const coursesData = await fs.readJSON(path.join(process.cwd(), 'data/courses.json'));
+
+  console.log('🚀 Starting seed process...');
+  await seedUsers(usersData);
+  await seedCourses(coursesData);
+  await seedRegistrations();
+
+  console.log('✅ Seeding complete!');
 }
 
 main()
-  .catch((e) => {
-    console.error(e);
+  .catch(async (e) => {
+    console.error('❌ Seeding error:', e);
     process.exit(1);
   })
   .finally(async () => {
