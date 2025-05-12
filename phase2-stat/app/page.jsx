@@ -1,4 +1,8 @@
+import { getServerSession } from "next-auth";
+import { authOptions } from "./api/auth/[...nextauth]/route";
+import { redirect } from "next/navigation";
 
+// Import your server actions
 import {
   fetchUserCountsByRole,
   fetchStudentCountPerCourse,
@@ -13,6 +17,15 @@ import {
 } from '../actions/serverActions';
 
 export default async function HomePage() {
+  // Get session on the server
+  const session = await getServerSession(authOptions);
+
+  // If no session, redirect to sign-in page
+  if (!session) {
+    redirect("/signin");
+  }
+
+  // Fetch all dashboard data
   const [
     userCountsByRole,
     studentCountPerCourse,
