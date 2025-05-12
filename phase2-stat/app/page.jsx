@@ -17,10 +17,8 @@ import {
 } from '../actions/serverActions';
 
 export default async function HomePage() {
-  // Get session on the server
   const session = await getServerSession(authOptions);
 
-  // If no session, redirect to sign-in page
   if (!session) {
     redirect("/signin");
   }
@@ -51,7 +49,7 @@ export default async function HomePage() {
   ]);
 
   return (
-    <main className="p-8 space-y-8">
+    <main className="dashboard">
       <h1 className="text-2xl font-bold">Dashboard Statistics</h1>
 
       <section>
